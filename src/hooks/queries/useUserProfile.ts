@@ -6,7 +6,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
-import { User } from '@/types/api-responses';
+import { LeaderBoardResponse, UserDetails } from '@/types/api-responses';
 
 /**
  * Query key for user profile
@@ -25,15 +25,30 @@ export const userProfileKeys = {
  * @returns Query result with user profile data, loading, and error states
  */
 export const useUserProfile = () => {
-  return useQuery<User, Error>({
+  return useQuery<UserDetails, Error>({
     queryKey: userProfileKeys.profile(),
-    queryFn: () => authService.getProfile(),
+    queryFn: async()=>{
+      const apiData = await authService.getProfile();
+      const storedUsername = typeof window !== 'undefined' 
+        ? localStorage.getItem('username') 
+        : '';
+        return {
+        ...apiData,
+        username: storedUsername || 'JOGADOR',
+      }
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes - profile doesn't change often
     gcTime: 10 * 60 * 1000, // 10 minutes cache
     retry: 1, // Only retry once for auth failures
   });
 };
-
+export const useLeaderboard = () =>{
+  return useQuery<LeaderBoardResponse[],Error>({
+    queryKey: ['leaderBoard'],
+    queryFn: authService.getLeaderBoard,
+    staleTime: 5 * 60 * 1000,
+  })
+}
 /**
  * Calculate user rank based on wins
  * 

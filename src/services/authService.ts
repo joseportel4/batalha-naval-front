@@ -10,24 +10,9 @@
  * - Let the caller (UI components, providers) handle persistence and state management
  */
 import api from './api';
-import { AuthResponse, User } from '@/types/api-responses';
+import { AuthResponse, LeaderBoardResponse, UserDetails, UserProfile } from '@/types/api-responses';
+import { LoginInput, RegisterInput } from '@/types/api-requests'; // Importa do novo arquivo
 
-/**
- * Input DTO for user login
- */
-export interface LoginInput {
-  email: string;
-  password: string;
-}
-
-/**
- * Input DTO for user registration
- */
-export interface RegisterInput {
-  username: string;
-  email: string;
-  password: string;
-}
 
 /**
  * Pure Authentication API Adapter
@@ -56,7 +41,7 @@ export const authService = {
    * @throws ApiError from the HTTP client layer
    */
   async register(credentials: RegisterInput): Promise<AuthResponse> {
-    const { data } = await api.post<AuthResponse>('/auth/register', credentials);
+    const { data } = await api.post<AuthResponse>('/users', credentials);
     return data;
   },
 
@@ -69,11 +54,14 @@ export const authService = {
    * @returns Promise resolving to user profile data
    * @throws ApiError (401 if not authenticated)
    */
-  async getProfile(): Promise<User> {
-    const { data } = await api.get<User>('/auth/profile');
+  async getProfile(): Promise<UserProfile> {
+    const { data } = await api.get<UserProfile>('/Users/profile');
     return data;
   },
-
+  async getLeaderBoard(): Promise<LeaderBoardResponse[]>{
+    const {data} = await api.get<LeaderBoardResponse[]>('/Users/player_stats');
+    return data;
+  },
   /**
    * Validate the current authentication token
    * 

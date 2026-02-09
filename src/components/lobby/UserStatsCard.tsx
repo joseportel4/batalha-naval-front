@@ -96,7 +96,8 @@ export const UserStatsCard: React.FC = () => {
   }
 
   const rank = getUserRank(user.wins);
-  const winRate = getWinRate(user.wins, user.gamesPlayed);
+  const gamesPlayed = user.wins + user.losses;
+  const winRate = getWinRate(user.wins, gamesPlayed);
 
   return (
     <Card>
@@ -136,7 +137,7 @@ export const UserStatsCard: React.FC = () => {
           />
           <StatItem
             label="Partidas"
-            value={user.gamesPlayed}
+            value={gamesPlayed}
             icon="🎮"
           />
           <StatItem

@@ -7,7 +7,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,9 +15,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { authService } from '@/services/authService';
-import { setToken } from '@/lib/utils';
-
+import { useAuth } from '@/providers/AuthProvider';
 // ============================================================================
 // Validation Schema
 // ============================================================================
@@ -34,10 +31,10 @@ const registerSchema = z
         /^[a-zA-Z0-9_]+$/,
         'Nome de usuário deve conter apenas letras, números e underscores'
       ),
-    email: z
+    /*email: z
       .string()
       .min(1, 'Email é obrigatório')
-      .email('Digite um email válido'),
+      .email('Digite um email válido'), */
     password: z
       .string()
       .min(6, 'A senha deve ter pelo menos 6 caracteres'),
@@ -104,9 +101,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
 // ============================================================================
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-
+  const { register: authRegister } = useAuth();
   const {
     register,
     handleSubmit,
@@ -115,32 +111,24 @@ export default function RegisterPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: '',
-      email: '',
+     // email: '',
       password: '',
       confirmPassword: '',
     },
   });
-
+  
   const onSubmit = async (data: RegisterFormData) => {
     setError(null);
 
     try {
-      const response = await authService.register({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      });
+      await authRegister({
+      username: data.username,
+      //email: data.email,
+      password: data.password,
+    });
 
-      // Persist token (UI layer responsibility)
-      setToken(response.token);
-
-      // Navigate to lobby
-      router.push('/lobby');
-    } catch (err: unknown) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as { message: string }).message
-          : 'Erro ao criar conta. Tente novamente.';
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Erro ao criar conta. Tente novamente.';
       setError(errorMessage);
     }
   };
@@ -186,7 +174,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Email Field */}
+            {/* Email Field 
             <div className="space-y-2">
               <label
                 htmlFor="email"
@@ -204,7 +192,7 @@ export default function RegisterPage() {
                 {...register('email')}
               />
             </div>
-
+              */}
             {/* Password Field */}
             <div className="space-y-2">
               <label

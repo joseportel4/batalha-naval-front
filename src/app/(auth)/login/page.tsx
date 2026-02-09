@@ -16,18 +16,16 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { authService } from '@/services/authService';
-import { setToken } from '@/lib/utils';
+import { useAuth } from '@/providers/AuthProvider';
 
 // ============================================================================
 // Validation Schema
 // ============================================================================
 
 const loginSchema = z.object({
-  email: z
+  username: z
     .string()
-    .min(1, 'Email é obrigatório')
-    .email('Digite um email válido'),
+    .min(1, 'Username é obrigatório'),
   password: z
     .string()
     .min(6, 'A senha deve ter pelo menos 6 caracteres'),
@@ -87,7 +85,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
 // ============================================================================
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -97,30 +95,19 @@ export default function LoginPage() {
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setError(null);
-
-    try {
-      const response = await authService.login(data);
-      
-      // Persist token (UI layer responsibility)
-      setToken(response.token);
-      
-      // Navigate to lobby
-      router.push('/lobby');
-    } catch (err: unknown) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as { message: string }).message
-          : 'Erro ao fazer login. Tente novamente.';
-      setError(errorMessage);
-    }
-  };
+  setError(null);
+  try {
+    await login(data);
+  } catch (err: any) {
+    setError(err.message || 'Erro ao fazer login.');
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-naval-bg p-4">
@@ -144,22 +131,22 @@ export default function LoginPage() {
               />
             )}
 
-            {/* Email Field */}
+            {/* username Field */}
             <div className="space-y-2">
               <label
-                htmlFor="email"
+                htmlFor="username"
                 className="block text-sm font-medium text-white"
               >
-                Email
+                Username
               </label>
               <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                autoComplete="email"
-                error={!!errors.email}
-                errorMessage={errors.email?.message}
-                {...register('email')}
+                id="username"
+                type="username"
+                placeholder="Usuario"
+                autoComplete= "username"
+                error={!!errors.username}
+                errorMessage={errors.username?.message}
+                {...register('username')}
               />
             </div>
 
