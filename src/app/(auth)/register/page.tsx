@@ -7,7 +7,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,9 +15,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { authService } from '@/services/authService';
-import { setToken } from '@/lib/utils';
-
+import { useAuth } from '@/providers/AuthProvider';
 // ============================================================================
 // Validation Schema
 // ============================================================================
@@ -104,9 +101,8 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
 // ============================================================================
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-
+  const { register: authRegister } = useAuth();
   const {
     register,
     handleSubmit,
@@ -120,27 +116,19 @@ export default function RegisterPage() {
       confirmPassword: '',
     },
   });
-
+  
   const onSubmit = async (data: RegisterFormData) => {
     setError(null);
 
     try {
-      const response = await authService.register({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      });
+      await authRegister({
+      username: data.username,
+      //email: data.email,
+      password: data.password,
+    });
 
-      // Persist token (UI layer responsibility)
-      setToken(response.accessToken);
-
-      // Navigate to lobby
-      router.push('/lobby');
-    } catch (err: unknown) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as { message: string }).message
-          : 'Erro ao criar conta. Tente novamente.';
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Erro ao criar conta. Tente novamente.';
       setError(errorMessage);
     }
   };

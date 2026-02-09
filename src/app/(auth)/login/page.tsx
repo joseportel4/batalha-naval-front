@@ -16,8 +16,7 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
-import { authService } from '@/services/authService';
-import { setToken } from '@/lib/utils';
+import { useAuth } from '@/providers/AuthProvider';
 
 // ============================================================================
 // Validation Schema
@@ -86,7 +85,7 @@ const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
 // ============================================================================
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { login } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -102,26 +101,13 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    setError(null);
-
-    try {
-      const response = await authService.login(data);
-      
-      // Persist token (UI layer responsibility)
-      console.log(response.accessToken)
-      setToken(response.accessToken);
-      
-      
-      // Navigate to lobby
-      router.push('/lobby');
-    } catch (err: unknown) {
-      const errorMessage =
-        err && typeof err === 'object' && 'message' in err
-          ? (err as { message: string }).message
-          : 'Erro ao fazer login. Tente novamente.';
-      setError(errorMessage);
-    }
-  };
+  setError(null);
+  try {
+    await login(data);
+  } catch (err: any) {
+    setError(err.message || 'Erro ao fazer login.');
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-naval-bg p-4">

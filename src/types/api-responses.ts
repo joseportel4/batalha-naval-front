@@ -2,8 +2,8 @@
 import { GamePhase, GameStatus, ShipOrientation, CellState } from './game-enums';
 
 export interface UserProfile {
-  rankPoints: number;                                                                                                                                                                                                                                                                                   │
-  wins: number;                                                                                                                                                                                                                                                                                         │
+  rankPoints: number;                                                                                                                                                                                                                                                                                   
+  wins: number;                                                                                                                                                                                                                                                                                         
   losses: number; 
 }
 export interface AuthResponse {
@@ -13,10 +13,7 @@ export interface AuthResponse {
   profile: UserProfile
 }
 
-export interface UserDetails {
-  rankPoints: number;                                                                                                                                                                                                                                                                                   │
-  wins: number;                                                                                                                                                                                                                                                                                         │
-  losses: number;
+export interface UserDetails extends UserProfile{
   username: string;
 }
 export interface Ship {

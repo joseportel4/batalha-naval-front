@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
 import { LoginInput, RegisterInput } from '@/types/api-requests';
 import { AuthResponse } from '@/types/api-responses';
-import { setUsername, deleteUsername, removeToken } from '@/lib/utils';
+import { setUsername, removeUsername, removeToken, setToken, setRefreshToken, removeRefreshToken } from '@/lib/utils';
 
 interface AuthContextType {
   user: string | null;
@@ -30,11 +30,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleAuthSuccess = (data: AuthResponse) => {
 
+    console.log("Auth Success Data:", data);
     setUser(data.username);
-    
     setUsername(data.username);
-    
-    document.cookie = `auth-token=${data.accessToken}; path=/; samesite=strict; secure`;
+    setToken(data.accessToken);
+    setRefreshToken(data.refreshToken)
+    console.log("Token set in localStorage (AuthProvider):", data.accessToken);
+    console.log("RefreshToken set in localStorage (AuthProvider):", data.refreshToken);
+    document.cookie = `auth-token=${data.accessToken}; path=/; samesite=strict;`;
     
     router.push('/lobby');
   };
@@ -51,8 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
-    deleteUsername();
+    removeUsername();
     removeToken();
+    removeRefreshToken();
     document.cookie = "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.push('/login');
   };

@@ -7,7 +7,7 @@
 import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from '@/lib/constants';
 import { getRefreshToken, getToken, removeRefreshToken, removeToken, setRefreshToken, setToken } from '@/lib/utils';
-
+import { API_CONFIG } from '@/lib/constants';
 /**
  * Standardized API error structure
  */
@@ -20,13 +20,7 @@ export interface ApiError {
 /**
  * Create and configure Axios instance
  */
-const api: AxiosInstance = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  timeout: 10000, // 10 seconds
-});
+const api: AxiosInstance = axios.create(API_CONFIG);
 
 /**
  * Request Interceptor
@@ -37,7 +31,7 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getToken();
-    
+    console.log("Token->",token)
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -88,7 +82,7 @@ api.interceptors.response.use(
 
         setToken(data.accessToken);
         setRefreshToken(data.refreshToken);
-
+        isRefreshing=false;
         if (originalRequest.headers) {
           originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         }

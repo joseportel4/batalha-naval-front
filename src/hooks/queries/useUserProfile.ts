@@ -6,7 +6,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { authService } from '@/services/authService';
-import { UserDetails, UserProfile } from '@/types/api-responses';
+import { UserDetails } from '@/types/api-responses';
 
 /**
  * Query key for user profile
@@ -35,7 +35,7 @@ export const useUserProfile = () => {
         return {
         ...apiData,
         username: storedUsername || 'JOGADOR',
-      } as UserDetails;
+      }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes - profile doesn't change often
     gcTime: 10 * 60 * 1000, // 10 minutes cache

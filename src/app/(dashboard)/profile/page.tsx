@@ -97,9 +97,9 @@ export default function ProfilePage() {
       </div>
     );
   }
-
+  const gamesPlayed = user.wins + user.losses;
   const rank = getUserRank(user.wins);
-  const winRate = getWinRate(user.wins, user.gamesPlayed);
+  const winRate = getWinRate(user.wins, gamesPlayed);
   const medals = getUserMedals(user);
   const sortedMedals = sortMedalsByStatus(medals);
   const unlockedCount = getUnlockedMedalCount(medals);
@@ -145,7 +145,7 @@ export default function ProfilePage() {
                 </span>
               </div>
               <p className="text-sm text-naval-text-secondary">
-                {user.email}
+                {user.username}
               </p>
             </div>
 
@@ -171,18 +171,18 @@ export default function ProfilePage() {
           value={user.wins}
           icon="🏆"
           color="success"
-          trend={`De ${user.gamesPlayed} partidas`}
+          trend={`De ${gamesPlayed} partidas`}
         />
         <StatCard
           label="Derrotas"
           value={user.losses}
           icon="💔"
           color="danger"
-          trend={`${user.gamesPlayed - user.wins - user.losses} empates`}
+          trend={`${gamesPlayed - user.wins - user.losses} empates`}
         />
         <StatCard
           label="Total de Partidas"
-          value={user.gamesPlayed}
+          value={gamesPlayed}
           icon="🎮"
           color="info"
           trend="Desde o início"

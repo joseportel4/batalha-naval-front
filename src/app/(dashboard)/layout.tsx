@@ -7,7 +7,9 @@ import Link from 'next/link';
 import { isAuthenticated } from '@/lib/utils';
 import { authService } from '@/services/authService';
 import { Button } from '@/components/ui/Button';
-import { useProfileQuery } from '@/hooks/queries/useMatchQuery';
+import { useUserProfile } from '@/hooks/queries/useUserProfile';
+import { useAuth } from '@/providers/AuthProvider';
+import { log } from 'console';
 
 export default function DashboardLayout({
   children,
@@ -15,7 +17,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { data: user } = useProfileQuery();
+  const {logout} = useAuth();
+
+  const { data: user } = useUserProfile();
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -24,7 +28,7 @@ export default function DashboardLayout({
   }, [router]);
 
   const handleLogout = () => {
-    authService.logout();
+    logout();
   };
 
   if (!isAuthenticated()) {
