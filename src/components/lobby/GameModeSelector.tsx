@@ -14,11 +14,13 @@ import { Input } from '@/components/ui/Input';
 import { useCreateMatchMutation, useJoinMatchMutation } from '@/hooks/queries/useMatchMutations';
 import { useMatchListQuery } from '@/hooks/queries/useMatchQuery';
 import { GameStatus } from '@/types/game-enums';
+import { Badge, Bot, Brain, Swords, Zap } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 /**
  * AI Difficulty levels
  */
-export type AIDifficulty = 'Basic' | 'Intermediate' | 'ADVANCED';
+export type AIDifficulty = 'Basic' | 'Intermediate' | 'Advanced';
 
 interface DifficultyOption {
   value: AIDifficulty;
@@ -41,8 +43,8 @@ const difficultyOptions: DifficultyOption[] = [
     icon: '🔥',
   },
   {
-    value: 'ADVANCED',
-    label: 'Advanced',
+    value: 'Advanced',
+    label: 'Avançado',
     description: 'IA com estratégia de caça otimizada.',
     icon: '⚡',
   },
@@ -119,15 +121,20 @@ export const GameModeSelector: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* PvE Section */}
-      <Card>
+      <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm relative overflow-hidden group">
+        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+          <Bot className="w-64 h-64" />
+        </div>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <span className="text-2xl">🤖</span>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-cyan-400">
+            <Bot className="w-6 h-6" />
             Treinamento (VS IA)
-          </CardTitle>
-          <CardDescription>
-            Aprimore suas habilidades contra a inteligência artificial
-          </CardDescription>
+            </CardTitle>
+        </div>
+          <CardDescription className="text-slate-400">
+          Aprimore suas habilidades contra a inteligência artificial
+        </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Difficulty Selection */}
@@ -149,10 +156,15 @@ export const GameModeSelector: React.FC = () => {
                   `}
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <span>{option.icon}</span>
-                    <span className="font-semibold text-white">{option.label}</span>
+                    {option.value === 'Basic' && <Brain className="w-4 h-4 text-emerald-400" />}
+                    {option.value === 'Intermediate' && <Swords className="w-4 h-4 text-orange-400" />}
+                    {option.value === 'Advanced' && <Zap className="w-4 h-4 text-red-400" />}
+                    <span className={cn("font-bold text-sm", 
+                        option.value === 'Basic' ? "text-emerald-400" :
+                        option.value === 'Intermediate' ? "text-orange-400" : "text-red-400"
+                    )}>{option.label}</span>
                   </div>
-                  <p className="text-xs text-naval-text-muted">{option.description}</p>
+                  <p className="text-xs text-slate-500 leading-snug">{option.description}</p>
                 </button>
               ))}
             </div>
@@ -161,11 +173,11 @@ export const GameModeSelector: React.FC = () => {
           <Button
             onClick={handleStartTraining}
             isLoading={createMatch.isPending}
-            className="w-full"
-            size="lg"
-          >
-            🚀 Iniciar Treinamento
-          </Button>
+            className="w-full bg-gradient-to-r from-cyan-600 to-blue-800 hover: text-white font-bold h-12 shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all hover:scale-[1.01] active:scale-[0.99]"
+            size="lg">
+           <Swords className="mr-2 h-5 w-5" />
+          Iniciar Treinamento
+          </Button> 
         </CardContent>
       </Card>
 
