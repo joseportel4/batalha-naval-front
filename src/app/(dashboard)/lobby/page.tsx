@@ -15,28 +15,26 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { useMatchListQuery } from '@/hooks/queries/useMatchQuery';
 import { useJoinMatchMutation } from '@/hooks/queries/useMatchMutations';
 import { GameStatus } from '@/types/game-enums';
 import { UserStatsCard } from '@/components/lobby/UserStatsCard';
 import { GameModeSelector } from '@/components/lobby/GameModeSelector';
 import { LeaderBoardResponse } from '@/types/api-responses';
 import { Leaderboard } from '@/components/lobby/LeaderBoard';
+import { ScrollText, User, Zap } from 'lucide-react';
 
 export default function LobbyPage() {
   const router = useRouter();
   
 
   return (
-    <div className="display-flex max-w-100vw mx-auto px-4 py-8 gap-6">
+    <div className="display-flex max-w-100vw mx-auto  ">
       {/* Page Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h1 className="text-4xl font-bold text-white tracking-tight">
           Centro de Comando
         </h1>
-        <p className="text-naval-text-secondary mt-2 text-lg">
-          Prepare-se para a batalha, Comandante
-        </p>
+        
       </div>
 
       {/* Main Grid Layout - 2 columns on desktop, 1 on mobile */}
@@ -46,27 +44,28 @@ export default function LobbyPage() {
           <UserStatsCard />
           
           {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <span>⚡</span>
-                Ações Rápidas
-              </CardTitle>
+          <Card className='p-2 pl-5  rounded-md border border-slate-800 bg-slate-900/50 backdrop-blur-sm shadow-xl overflow-hidden h-half'>
+            <CardHeader className="pb-3 px-5 ">
+              <CardTitle className="flex items-center gap-5 text-cyan-400">
+                  <Zap className="w-6 h-6" />
+                      Ações Rápidas
+                </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="p-1 space-y-3 justify-start">
               <Button
-                variant="ghost"
-                className="w-full justify-start"
-                onClick={() => router.push('/profile')}
-              >
-                👤 Ver Perfil Completo
+                variant="link"
+                className="w-full p-4 justify-start text-slate-300 hover:text-white border-slate-700 hover:bg-slate-800 hover:border-cyan-500/50 transition-all group"
+                onClick={() => router.push('/profile')}>
+                <User className=" mr-3 h-6 w-6 text-white-500 group-hover:text-white-400" />
+                    Ver Perfil Completo
               </Button>
               <Button
-                variant="ghost"
-                className="w-full justify-start"
+                variant="link"
+                className="w-full p-4 justify-start text-slate-300 hover:text-white border-slate-700 hover:bg-slate-800 hover:border-cyan-500/50 transition-all group"
                 onClick={() => router.push('/lobby')}
               >
-                📜 Histórico de Batalhas
+                <ScrollText className="mr-3 h-6 w-6 text-purple-500 group-hover:text-purple-400" />
+          Histórico de Batalhas (FALTA NO BACK) {/** TODO:IMLEMENT */}
               </Button>
             </CardContent>
           </Card>
@@ -77,17 +76,13 @@ export default function LobbyPage() {
         <div className='display-flex center gap-10'>
           
           {/* Section Header */}
-          
-
           {/* Game Mode Selector */}
           <GameModeSelector />
           {/* Available Matches List */}
-
-          
           
         </div>
-        <div className="lg:col-span-8 space-y-6">
-          <Leaderboard></Leaderboard>
+        <div className="display-flex center h-full ">
+          <Leaderboard ></Leaderboard>
         </div>
       </div>
     </div>

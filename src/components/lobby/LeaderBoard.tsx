@@ -8,6 +8,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 import { useLeaderboard, getUserRank } from '@/hooks/queries/useUserProfile';
+import { Badge, Crown, Medal, Trophy } from 'lucide-react';
+import Image from 'next/image';
 
 /**
  * Skeleton loader for leaderboard rows
@@ -40,46 +42,57 @@ interface PlayerRowProps {
 
 const PlayerRow: React.FC<PlayerRowProps> = ({ rankNumber, username, points, wins, isTopThree }) => {
   const rankInfo = getUserRank(wins);
-  
+
   // Highlight colors for top 3
   const rankColors = [
-    'bg-yellow-500 text-black', // 1st
-    'bg-slate-300 text-black',   // 2nd
-    'bg-amber-700 text-white',  // 3rd
+    'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20', // 1st
+    'bg-slate-400 text-slate-900',   // 2nd
+    'bg-amber-700 text-amber-100',  // 3rd
   ];
 
   return (
-    <div className={`flex items-center gap-4 p-3 rounded-md border transition-colors ${
-      isTopThree 
-        ? 'bg-naval-action/10 border-naval-action/30 shadow-[inset_0_0_10px_rgba(var(--naval-action-rgb),0.1)]' 
-        : 'bg-naval-bg border-naval-border hover:border-naval-action/50'
-    }`}>
-      {/* Rank Position Badge */}
-      <div className={`flex-shrink-0 w-8 h-8 flex items-center justify-center rounded font-bold text-sm ${
-        isTopThree ? rankColors[rankNumber - 1] : 'bg-naval-border text-naval-text-secondary'
+    <div className={`flex p-2  gap-3 p-2 m-auto rounded-2xl  border  ${isTopThree
+      ? 'bg-naval-action/10 border-naval-action/30 shadow-[inset_0_0_10px_rgba(var(--naval-action-rgb),0.1)]'
+      : 'bg-naval-bg border-naval-border hover:border-naval-action/50'
       }`}>
+      {/* Rank Position Badge */}
+      <div className={`flex items-center justify-center  w-12 h-12 rounded-2xl  font-bold text-m 
+      ${isTopThree ? rankColors[rankNumber - 1] : 'bg-slate-800 text-slate-500'
+        }`
+      }>
+        
         {rankNumber}
       </div>
+       <div className={`h-10 w-10 gap-2 ${
+        rankNumber==1 ?'" border-2 border-amber-500':'border-2 border-slate-700'
+      }`}>
+        <div className="bg-slate-800 text-slate-400">
+                          <Image src="/mortyy.jpg" alt="" width={250} height={150} className="border-2 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]"></Image></div>
+      </div>
 
-      {/* Player Info */}
       <div className="flex-1 min-w-0">
-        <p className="font-bold text-white truncate">{username}</p>
-        <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-[10px]">{rankInfo.icon}</span>
-          <span className="text-[10px] font-medium text-naval-text-muted uppercase tracking-wider">
-            {rankInfo.title}
+        <div className="flex items-center gap-5 mr-5 justify-between">
+          <span className={`font-bold truncate ${
+            rankNumber==1 ? "text-amber-400": "text-white"
+          }`}>
+            {username}
           </span>
+          <span className="font-mono text-cyan-400 font-bold">{points}PTS</span>
+        </div>
+        <div className="flex items-center gap-2 mt-1 text-[10px] text-slate-400">
+          <span className="flex items-center gap-1 text-amber-500/80 ">
+            <Medal className="w-3 h-3" />
+            
+          </span>
+          <span>• {wins} Vitórias</span>
         </div>
       </div>
-
-      {/* Stats */}
-      <div className="text-right">
-        <p className="text-sm font-mono font-bold text-naval-action">{points} PTS</p>
-        <p className="text-[10px] text-naval-text-muted">{wins} Vitórias</p>
-      </div>
     </div>
-  );
-};
+
+     
+
+    )
+}
 
 /**
  * Leaderboard Card
@@ -108,41 +121,41 @@ export const Leaderboard: React.FC = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-slate-800 bg-slate-900/50 rounded-2xl backdrop-blur-sm h-full flex flex-col min-w-2xs">
+      <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <span className="text-2xl">⚓</span>
-            LeaderBoard
+          <CardTitle className="flex items-center gap-2 text-amber-400">
+            <Trophy className="w-5 h-5" />
+            Leaderboard
           </CardTitle>
-          <span className="text-[10px] bg-naval-border px-2 py-0.5 rounded text-naval-text-secondary uppercase font-mono">
-            Ao Vivo
-          </span>
         </div>
-        <CardDescription className="text-xs">
-          Comandantes com maior pontuação na frota.
-        </CardDescription>
+        <p className="text-xs text-slate-400">Comandantes com maior pontuação na frota.</p>
       </CardHeader>
-      
-      <CardContent>
+
+      <CardContent className="flex p-0">
         {isLoading ? (
           <LeaderboardSkeleton />
         ) : !players || players.length === 0 ? (
-          <div className="text-center py-8 text-naval-text-muted italic text-sm">
+          <div className="text-center py-8 text-naval-text-muted italic text-xs">
             Nenhuma atividade de combate registrada.
           </div>
         ) : (
-          <div className="space-y-2">
-            {players.slice(0, 10).map((player, index) => (
-              <PlayerRow
-                key={player.userId}
-                rankNumber={index + 1}
-                username={player.username}
-                points={player.points}
-                wins={player.wins}
-                isTopThree={index < 3}
-              />
-            ))}
+
+
+          <div className="w-full p-2">
+            <div className="space-y-3">
+              {players.slice(0, 10).map((player, index) => (
+                <PlayerRow
+                  key={player.userId}
+                  rankNumber={index + 1}
+                  username={player.username}
+                  points={player.points}
+                  wins={player.wins}
+                  isTopThree={index < 3}
+                />
+              ))}
+            </div>
+
           </div>
         )}
       </CardContent>

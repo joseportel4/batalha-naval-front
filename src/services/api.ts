@@ -95,7 +95,8 @@ api.interceptors.response.use(
         isRefreshing = false;
         removeToken();
         removeRefreshToken();
-        
+        document.cookie = "auth-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
         // redirect
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
