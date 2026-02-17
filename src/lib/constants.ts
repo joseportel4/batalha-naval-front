@@ -8,8 +8,8 @@ export const SHIP_SIZES: Record<ShipType, number> = {
   [ShipType.PORTA_AVIAO_B]: 6,
   [ShipType.NAVIO_GUERRA_A]: 4,
   [ShipType.NAVIO_GUERRA_B]: 4,
-  [ShipType.ENCOURACADO]: 3, 
-  [ShipType.SUBMARINO]: 1,  
+  [ShipType.ENCOURACADO]: 3,
+  [ShipType.SUBMARINO]: 1,
 };
 
 export const SHIP_NAMES: Record<ShipType, string> = {

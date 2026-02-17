@@ -86,7 +86,7 @@ export interface ShipDto {
 }
 
 export interface BoardStateDto {
-  grid: CellState[][]; 
+  grid: CellState[][];
   ships: ShipDto[];
 }
 
@@ -97,10 +97,9 @@ export interface MatchStatsDto {
   opponentConsecutiveHits: number;
 }
 
-
 export interface MatchGameState {
   matchId: string;
-  status: MatchStatus; 
+  status: MatchStatus;
   currentTurnPlayerId: string;
   isMyTurn: boolean;
   winnerId?: string | null;

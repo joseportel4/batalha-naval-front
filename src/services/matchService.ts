@@ -41,12 +41,12 @@ export const matchService = {
     const backendPayload = {
       matchId: matchId,
       x: shot.col,
-      y: shot.row
+      y: shot.row,
     };
 
     const { data } = await api.post<ShootResponse>(
-      `/match/shot`, 
-      backendPayload
+      `/match/shot`,
+      backendPayload,
     );
     return data;
   },

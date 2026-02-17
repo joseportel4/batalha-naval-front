@@ -16,9 +16,9 @@ export const useMatchQuery = (matchId: string, enabled: boolean = true) => {
     //se acabou ou está setup, não precisa de polling agressivo (o setup usa mutation para atualizar).
     refetchInterval: (query) => {
       const status = query.state.data?.status;
-      if (status === MatchStatus.IN_PROGRESS) return 2000; 
+      if (status === MatchStatus.IN_PROGRESS) return 2000;
       return false;
-    }
+    },
   });
 };
 
