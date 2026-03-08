@@ -27,6 +27,8 @@ export interface ApiError {
   message: string;
   status?: number;
   code?: string;
+  title?: string;
+  detail?: string;
 }
 
 /**
@@ -126,7 +128,7 @@ api.interceptors.response.use(
     // Handle other errors
     // Backend may return ProblemDetails (ASP.NET) with `detail` instead of `message`
     const responseData = error.response?.data as
-      | { message?: string; detail?: string }
+      | { message?: string; title?: string; detail?: string }
       | undefined;
     const apiError: ApiError = {
       message:
@@ -136,6 +138,8 @@ api.interceptors.response.use(
         "An unexpected error occurred",
       status: error.response?.status,
       code: error.code,
+      title: responseData?.title,
+      detail: responseData?.detail,
     };
 
     return Promise.reject(apiError);

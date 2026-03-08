@@ -371,6 +371,20 @@ export default function BattlePhase({ match }: BattlePhaseProps) {
     }
   }, [isFinished, resolvedIsWinner, addToast, playVictory, queryClient]);
 
+  const whoIsWinner = (match: AdaptedMatch) => {
+    const p1StatusIsDefeated =
+      match.player1Board.ships.length === 6 &&
+      match.player1Board.ships.every((ship) => ship.isSunk);
+    const p2StatusIsDefeated =
+      match.player2Board.ships.length === 6 &&
+      match.player2Board.ships.every((ship) => ship.isSunk);
+    return p1StatusIsDefeated
+      ? "DERROTA"
+      : p2StatusIsDefeated
+        ? "VITÓRIA"
+        : "PARTIDA ENCERRADA POR INATIVIDADE";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 p-8 relative">
       {/* Toast Container */}
@@ -415,11 +429,7 @@ export default function BattlePhase({ match }: BattlePhaseProps) {
           {isFinished && (
             <div className="mt-6 text-center">
               <div className="text-5xl font-black mb-4 animate-bounce">
-                {resolvedIsWinner === true
-                  ? "VITÓRIA!"
-                  : resolvedIsWinner === false
-                    ? "DERROTA"
-                    : "PARTIDA ENCERRADA POR INATIVIDADE"}
+                {whoIsWinner(match)}
               </div>
               <Button onClick={() => router.push("/lobby")} size="lg">
                 Voltar ao Lobby

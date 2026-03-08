@@ -14,4 +14,8 @@ export const campaignService = {
     const { data } = await api.post("/campaign/start");
     return data;
   },
+
+  cancelMatch: async (matchId: string): Promise<void> => {
+    await api.post(`/match/${matchId}/cancel`);
+  },
 };
