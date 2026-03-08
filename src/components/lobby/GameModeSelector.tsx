@@ -321,7 +321,7 @@ export const GameModeSelector: React.FC = () => {
         </div>
         <CardHeader className="pb-1">
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2 text-yellow-500 pb-0">
+            <CardTitle className="flex items-center gap-2 text-cyan-500 pb-0">
               <Medal className="w-6 h-6" />
               Modo Campanha
             </CardTitle>
@@ -589,7 +589,7 @@ export const GameModeSelector: React.FC = () => {
           </Button>
         </CardContent>
       </Card>
-      <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm min-h-[300px] flex flex-col">
+      {/*<Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm min-h-[300px] flex flex-col">
         <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
           <Radar className="w-64 h-64" />
         </div>
@@ -686,7 +686,7 @@ export const GameModeSelector: React.FC = () => {
             </div>
           )}
         </CardContent>
-      </Card>
+      </Card>*/}
       {alreadyMatch.inMatch && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
