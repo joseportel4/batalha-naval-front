@@ -350,10 +350,27 @@ export default function SetupPhase({ match }: SetupPhaseProps) {
 
                 {/* Success / waiting state */}
                 {(isPlayerReady || setupMatch.isSuccess) && (
-                  <div className="mt-6 p-4 bg-green-900/30 border border-green-600/40 rounded-lg">
+                  <div className="mt-6 p-4 bg-green-900/30 border border-green-600/40 rounded-lg space-y-3">
                     <p className="text-green-400 text-center font-bold animate-pulse">
                       ⚓ AGUARDANDO COMANDANTE ADVERSÁRIO...
                     </p>
+                    <p className="text-xs text-gray-400 text-center">
+                      Compartilhe o ID da partida com seu oponente:
+                    </p>
+                    <div className="flex items-center gap-2 justify-center">
+                      <code className="text-xs bg-black/40 text-cyan-300 px-3 py-1.5 rounded font-mono select-all break-all">
+                        {match.id}
+                      </code>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(match.id);
+                        }}
+                        className="text-xs bg-cyan-700/30 hover:bg-cyan-700/50 text-cyan-300 px-2 py-1.5 rounded transition-colors"
+                        title="Copiar ID"
+                      >
+                        📋
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

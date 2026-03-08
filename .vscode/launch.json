@@ -14,13 +14,13 @@
       "name": "Next.js: debug client-side",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:3000"
+      "url": "http://0.0.0.0:3000"
     },
     {
       "name": "Next.js: debug client-side (Firefox)",
       "type": "firefox",
       "request": "launch",
-      "url": "http://localhost:3000",
+      "url": "http://0.0.0.0:3000",
       "reAttach": true,
       "pathMappings": [
         {

@@ -12,10 +12,13 @@ export const useMatchQuery = (matchId: string, enabled: boolean = true) => {
       return await matchService.getMatchState(matchId);
     },
     enabled: !!matchId,
-    //se estiver jogando, atualiza a cada 2 segundos.
-    //se acabou ou está setup, não precisa de polling agressivo (o setup usa mutation para atualizar).
+    // Polling adaptativo por fase:
+    // - SETUP: 3s (PvP precisa detectar quando ambos terminaram o setup)
+    // - IN_PROGRESS: 2s (gameplay ativo, precisa de polling rápido)
+    // - FINISHED: para de fazer polling
     refetchInterval: (query) => {
       const status = query.state.data?.status;
+      if (status === MatchStatus.SETUP) return 3000;
       if (status === MatchStatus.IN_PROGRESS) return 2000;
       return false;
     },

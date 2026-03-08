@@ -127,7 +127,7 @@ export const GameModeSelector: React.FC = () => {
   };
 
   /**
-   * Handle PvP challenge
+   * Handle PvP match creation with opponent ID
    */
   const handleChallenge = async () => {
     if (!opponentId.trim()) {
@@ -138,12 +138,31 @@ export const GameModeSelector: React.FC = () => {
     setPvpError("");
 
     try {
-      // Try to join an existing match or create a challenge
-      const match = await joinMatch.mutateAsync(opponentId.trim());
-      router.push(`/match/${match.id}`);
+      const match = await createMatch.mutateAsync({
+        mode: "Classic",
+        opponentId: opponentId.trim(),
+      });
+      router.push(`/match/${match.matchId}`);
     } catch (error) {
-      console.error("Erro ao desafiar oponente:", error);
-      setPvpError("Não foi possível encontrar o oponente");
+      console.error("Erro ao criar partida PvP:", error);
+      setPvpError("Não foi possível criar a partida. Verifique o ID do oponente.");
+    }
+  };
+
+  /**
+   * Handle creating a PvP match without specifying an opponent (open lobby)
+   */
+  const handleCreatePvPMatch = async () => {
+    setPvpError("");
+
+    try {
+      const match = await createMatch.mutateAsync({
+        mode: "Classic",
+      });
+      router.push(`/match/${match.matchId}`);
+    } catch (error) {
+      console.error("Erro ao criar partida PvP:", error);
+      setPvpError("Não foi possível criar a partida.");
     }
   };
 
@@ -337,12 +356,12 @@ export const GameModeSelector: React.FC = () => {
         <CardContent className="space-y-6">
           <div className="space-y-2">
             <label className="text-sm font-medium text-slate-300">
-              ID da Partida ou Oponente
+              ID do Oponente
             </label>
             <div className="flex gap-2">
               <Input
                 type="text"
-                placeholder="Digite o ID da partida para entrar..."
+                placeholder="Cole o ID (GUID) do oponente para desafiar..."
                 value={opponentId}
                 onChange={(e) => {
                   setOpponentId(e.target.value);
@@ -353,7 +372,7 @@ export const GameModeSelector: React.FC = () => {
               />
             </div>
             <p className="text-xs text-slate-500">
-              Ou crie uma nova partida e compartilhe o ID com seu oponente
+              Digite o ID do oponente para desafiá-lo, ou crie uma partida aberta e compartilhe o ID
             </p>
           </div>
 
@@ -361,15 +380,15 @@ export const GameModeSelector: React.FC = () => {
             <Button
               className="w-full rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-800 hover: text-white font-bold h-12 shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all hover:scale-[1.01] active:scale-[0.99]"
               onClick={handleChallenge}
-              isLoading={joinMatch.isPending}
+              isLoading={createMatch.isPending}
               disabled={!opponentId.trim()}
               size="lg"
             >
               <Gamepad2 className="mr-2 h-6 w-6 text-white" />
-              <p className="text-white">Entrar na Partida</p>
+              <p className="text-white">Desafiar Jogador</p>
             </Button>
             <Button
-              onClick={handleStartTraining}
+              onClick={handleCreatePvPMatch}
               isLoading={createMatch.isPending}
               size="lg"
               className="w-full rounded-2xl bg-gradient-to-r from-cyan-600 to-blue-800 hover: text-white font-bold h-12 shadow-[0_0_20px_rgba(236,72,153,0.3)] transition-all hover:scale-[1.01] active:scale-[0.99]"
